@@ -4,8 +4,9 @@ command: 'curl -s "http://api.open-notify.org/astros.json"'
 refreshFrequency: 21000000
 
 style: """
-  top: 10px
-  left: 10px
+  position: absolute
+  top: 20px
+  left: 20px
   color: #fff
 
   .output p,
@@ -35,6 +36,18 @@ render: (output) -> """
   </div>
 """
 
+# credit goes to https://github.com/eanplatter/minimal-github-widgit
+afterRender: (widget) ->
+  # this is a bit of a hack until jQuery UI is included natively
+  $.ajax({
+    url: "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js",
+    cache: true,
+    dataType: "script",
+    success: ->
+      $(widget).draggable()
+      return
+  })
+
 update: (output, domEl) ->
   jsonData = jQuery.parseJSON(output)
   success = jsonData.message == "success"
@@ -48,4 +61,4 @@ update: (output, domEl) ->
 
     $(domEl).find('#people').html ""
     for person in jsonData.people
-      $(domEl).find('#people').append '<li>'+person.name+'</li>'
+      $(domEl).find('#people').append '<li>'+person.name+' ('+person.craft+')</li>'
