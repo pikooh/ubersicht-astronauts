@@ -49,8 +49,11 @@ afterRender: (widget) ->
   })
 
 update: (output, domEl) ->
-  jsonData = jQuery.parseJSON(output)
-  success = jsonData.message == "success"
+  try
+    jsonData = jQuery.parseJSON(output)
+    success = jsonData.message == "success"
+  catch e
+    success = false
 
   $(domEl).find('#error').toggle( !success )
   $(domEl).find('#success').toggle( success )
